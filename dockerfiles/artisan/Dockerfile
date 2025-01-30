@@ -1,9 +1,7 @@
-FROM php:8.3-cli-alpine
+FROM php:8.3-cli
 
 WORKDIR /var/www/pctest
 
-# RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install pdo pdo_mysql
 
 CMD tail -f /dev/null
-
-#ENTRYPOINT ["php", "artisan"]
