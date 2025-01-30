@@ -1,6 +1,6 @@
 FROM composer:latest
 
-WORKDIR /var/www/party
+WORKDIR /var/www/pctest
 
 # ENTRYPOINT ["composer"]
 

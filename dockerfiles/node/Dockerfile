@@ -1,6 +1,6 @@
 FROM node:latest
 
-WORKDIR /var/www/party
+WORKDIR /var/www/pctest
 
 # CMD ["npm", "run", "dev"]
 

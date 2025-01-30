@@ -36,6 +36,10 @@ services:
     image: mysql:latest
     ports:
       - "3306:3306"
+    volumes:
+      - "./mysql/data:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=value
   artisan:
     container_name: artisan
     build: dockerfiles/artisan
@@ -47,7 +51,3 @@ services:
     container_name: adminer
     ports:
       - "7777:8080"
-
-  redis:
-    image: redis:latest
-    container_name: redis

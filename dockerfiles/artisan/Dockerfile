@@ -1,8 +1,8 @@
 FROM php:8.3-cli-alpine
 
-WORKDIR /var/www/party
+WORKDIR /var/www/pctest
 
-RUN apk add libpq-dev && docker-php-ext-install pdo pdo_pgsql
+# RUN docker-php-ext-install pdo pdo_mysql
 
 CMD tail -f /dev/null
 
