@@ -1,0 +1,60 @@
+version: "3.8"
+
+
+services:
+  nginx:
+    image: nginx:stable
+    container_name: nginx
+    volumes:
+      - ./src:/var/www/party
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8080:80"
+      - "443:443"
+  php:
+    container_name: php
+    volumes:
+      - ./src:/var/www/party
+    build: dockerfiles/php
+
+  composer:
+    container_name: composer
+    build: dockerfiles/composer
+    volumes:
+      - ./src:/var/www/party
+
+  noda:
+    container_name: nodejs
+    build: dockerfiles/noda
+    volumes:
+      - ./src:/var/www/party
+    ports:
+    - "5173:5173"
+
+  artisan:
+    container_name: artisan
+    build: dockerfiles/artisan
+    volumes:
+      - ./src:/var/www/party
+
+  pgsql:
+    image: postgres:latest
+    container_name: pgsql
+    environment:
+      - POSTGRES_PASSWORD=test
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      - ./postgres/dumps:/var/mydumps
+    
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    ports:
+      - "7777:8080"
+
+  redis:
+    image: redis:latest
+    container_name: redis
