@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Http\Requests\Order\StoreRequest;
 
 class OrderController extends Controller
@@ -29,26 +31,64 @@ class OrderController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        // dd($request->all());
-
-        Order::create([
-            'client_name' => $request->get('name'),
-            'client_phone' => $request->get('phone'),
-            'tariff_id' => $request->get('tariff'),
-            'schedule_type' => $request->get('schedule_type'),
-            'comment' => $request->get('comment'),
-            'first_date' => $request->get('firstDate'),
-            'last_date' => $request->get('lastDate'),
-        ]);
-
-
-        // Expense::create([
-        //     'name' => $request->get('name'),
-        //     'room_id' => session()->get('current_room'),
-        //     'price' => $findExpenseInfoWillStore->getPrice(),
-        //     'count' => $request->get('count'),
-        //     'current_formula' => $findExpenseInfoWillStore->getFormula(),
+        // Order::create([
+        //     'client_name' => $request->get('name'),
+        //     'client_phone' => $request->get('phone'),
+        //     'tariff_id' => $request->get('tariff'),
+        //     'schedule_type' => $request->get('schedule_type'),
+        //     'comment' => $request->get('comment'),
+        //     'first_date' => $request->get('firstDate'),
+        //     'last_date' => $request->get('lastDate'),
         // ]);
+
+
+        $rations = [];
+
+
+        if($request->get('schedule_type') == 'EVERY_DAY') {
+            $period = CarbonPeriod::create($request->get('firstDate'), $request->get('lastDate'))->toArray();
+    
+            foreach($period as $date){
+                array_push($rations, $date->format('Y-m-d'));
+            }
+        }
+
+
+        if($request->get('schedule_type') == 'EVERY_OTHER_DAY') {
+            $period = CarbonPeriod::create($request->get('firstDate'), $request->get('lastDate'))->toArray();
+            
+            foreach($period as $key => $date){
+                if (0 === ($key % 2)) {
+                    array_push($rations, $date->format('Y-m-d'));
+                    continue;
+                }
+            }
+        }
+
+
+        if($request->get('schedule_type') == 'EVERY_OTHER_DAY_TWICE') {
+            $period = CarbonPeriod::create($request->get('firstDate'), $request->get('lastDate'))->toArray();
+            $daysInPeriod = count($period);
+
+            foreach($period as $key => $date){
+                if (0 === ($key % 2)) {
+                    array_push($rations, $date->format('Y-m-d'));
+                    array_push($rations, $date->format('Y-m-d'));
+                    continue;
+                }
+            }
+
+            if(!($daysInPeriod % 2 === 0)){
+                unset($rations[count($rations) - 1]);
+            }
+        }
+
+
+
+
+
+
+
     }
 
     /**
