@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Http\Requests\Order\StoreRequest;
 
 class OrderController extends Controller
 {
@@ -19,15 +21,34 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return view('order.create');
+        return view('order.create', ['tariffs' => Order::getTariffs()]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        // dd($request->all());
+
+        Order::create([
+            'client_name' => $request->get('name'),
+            'client_phone' => $request->get('phone'),
+            'tariff_id' => $request->get('tariff'),
+            'schedule_type' => $request->get('schedule_type'),
+            'comment' => $request->get('comment'),
+            'first_date' => $request->get('firstDate'),
+            'last_date' => $request->get('lastDate'),
+        ]);
+
+
+        // Expense::create([
+        //     'name' => $request->get('name'),
+        //     'room_id' => session()->get('current_room'),
+        //     'price' => $findExpenseInfoWillStore->getPrice(),
+        //     'count' => $request->get('count'),
+        //     'current_formula' => $findExpenseInfoWillStore->getFormula(),
+        // ]);
     }
 
     /**
