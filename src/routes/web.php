@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +26,8 @@ Route::group(['prefix' => 'orders'], function(){
     Route::post('/store', [OrderController::class, 'store'])->name('orders.store');
 });
 
+
+Route::post('/ration/store', [RationController::class, 'store'])->name('rations.store');
 
 
 // Route::resource('orders', OrderController::class);

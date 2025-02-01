@@ -8,7 +8,6 @@ use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\Order\StoreRequest;
-use App\Services\RationService;
 
 class OrderController extends Controller
 {
@@ -31,7 +30,7 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, RationService $rationService)
+    public function store(StoreRequest $request)
     {
         // Order::create([
         //     'client_name' => $request->get('name'),
@@ -43,12 +42,11 @@ class OrderController extends Controller
         //     'last_date' => $request->get('lastDate'),
         // ]);
 
-
-        // dd($request->get('firstDate'));
-
-        // $rationService->setTariff($request->get('tariff'));
+    
 
 
+        
+        $cookingDayBefore = Tariff::where('id', $request->get('tariff'))->get()->first()->cooking_day_before;
         
 
 
@@ -58,18 +56,14 @@ class OrderController extends Controller
         $lastDateBefore = Carbon::create($lastDate)->subDay()->format('Y-m-d');
 
 
-
-
         $deliveryPeriod = CarbonPeriod::create($firstDate, $lastDate)->toArray();
-        // dd($deliveryPeriod);
 
 
-
-        // if($cookingDayBefore == false) {
-        //     $cookingPeriod = $deliveryPeriod;
-        // } else {
-        //     $cookingPeriod = CarbonPeriod::create($firstDateBefore, $lastDateBefore)->toArray();
-        // }
+        if($cookingDayBefore == false) {
+            $cookingPeriod = $deliveryPeriod;
+        } else {
+            $cookingPeriod = CarbonPeriod::create($firstDateBefore, $lastDateBefore)->toArray();
+        }
 
 
         /** */
@@ -84,13 +78,13 @@ class OrderController extends Controller
          * Каждый день
          */
         if($request->get('schedule_type') == 'EVERY_DAY') {
-            // $cookingDate;
+            $cookingDate;
 
-            // if($cookingDayBefore == 0){
-            //     $cookingDate = $deliveryPeriod;
-            // } else {
-            //     $cookingDate = CarbonPeriod::create($firstDate, $lastDate)->toArray();
-            // }
+            if($cookingDayBefore == 0){
+                $cookingDate = $deliveryPeriod;
+            } else {
+                $cookingDate = CarbonPeriod::create($firstDate, $lastDate)->toArray();
+            }
     
             foreach($deliveryPeriod as $date){
                 array_push($rations, $date->format('Y-m-d'));
@@ -134,7 +128,7 @@ class OrderController extends Controller
 
         dd($rations);
 
-        
+
 
 
     }
