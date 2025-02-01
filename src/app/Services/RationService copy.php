@@ -84,19 +84,20 @@ class RationService
     private function prepareRationsDays(): void
     {
         $this->createCarbonDeliveryPeriod();
+        $this->createCarbonCookingPeriod();
 
         $rations = [];
 
         if($this->scheduleType == 'EVERY_DAY') {
             foreach($this->carbonDeliveryPeriodArray as $date){
-                array_push($rations, $date);
+                array_push($rations, $date->format('Y-m-d'));
             }
         }
 
         if($this->scheduleType == 'EVERY_OTHER_DAY') {
             foreach($this->carbonDeliveryPeriodArray as $key => $date){
                 if (0 === ($key % 2)) {
-                    array_push($rations, $date);
+                    array_push($rations, $date->format('Y-m-d'));
                     continue;
                 }
             }
@@ -107,8 +108,8 @@ class RationService
 
             foreach($this->carbonDeliveryPeriodArray as $key => $date){
                 if (0 === ($key % 2)) {
-                    array_push($rations, $date);
-                    array_push($rations, $date);
+                    array_push($rations, $date->format('Y-m-d'));
+                    array_push($rations, $date->format('Y-m-d'));
                     continue;
                 }
             }
@@ -119,20 +120,5 @@ class RationService
         }
 
         $this->rations = $rations;
-    }
-
-    /**
-     * 
-     */
-    public function prepareCookingDays()
-    {
-        $cookingDays = [];
-
-        foreach($this->rations as $day)
-        {
-            array_push($cookingDays, Carbon::create($day)->subDay());
-        }
-
-        dd($cookingDays);
     }
 }
