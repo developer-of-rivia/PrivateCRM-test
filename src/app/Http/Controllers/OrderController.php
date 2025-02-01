@@ -44,98 +44,12 @@ class OrderController extends Controller
         // ]);
 
 
-        // dd($request->get('firstDate'));
 
-        // $rationService->setTariff($request->get('tariff'));
-
-
-        
-
-
-        $firstDate = $request->get('firstDate');
-        $firstDateBefore = Carbon::create($firstDate)->subDay()->format('Y-m-d');
-        $lastDate = $request->get('lastDate');
-        $lastDateBefore = Carbon::create($lastDate)->subDay()->format('Y-m-d');
-
-
-
-
-        $deliveryPeriod = CarbonPeriod::create($firstDate, $lastDate)->toArray();
-        // dd($deliveryPeriod);
-
-
-
-        // if($cookingDayBefore == false) {
-        //     $cookingPeriod = $deliveryPeriod;
-        // } else {
-        //     $cookingPeriod = CarbonPeriod::create($firstDateBefore, $lastDateBefore)->toArray();
-        // }
-
-
-        /** */
-        /** */
-        /** */
-
-
-
-        $rations = [];
-
-        /**
-         * Каждый день
-         */
-        if($request->get('schedule_type') == 'EVERY_DAY') {
-            // $cookingDate;
-
-            // if($cookingDayBefore == 0){
-            //     $cookingDate = $deliveryPeriod;
-            // } else {
-            //     $cookingDate = CarbonPeriod::create($firstDate, $lastDate)->toArray();
-            // }
-    
-            foreach($deliveryPeriod as $date){
-                array_push($rations, $date->format('Y-m-d'));
-            }
-        }
-
-
-        /**
-         * Через день
-         */
-        if($request->get('schedule_type') == 'EVERY_OTHER_DAY') {
-            
-            foreach($deliveryPeriod as $key => $date){
-                if (0 === ($key % 2)) {
-                    array_push($rations, $date->format('Y-m-d'));
-                    continue;
-                }
-            }
-        }
-
-
-        /**
-         * Через день два раза
-         */
-        if($request->get('schedule_type') == 'EVERY_OTHER_DAY_TWICE') {
-            $daysInPeriod = count($deliveryPeriod);
-
-            foreach($deliveryPeriod as $key => $date){
-                if (0 === ($key % 2)) {
-                    array_push($rations, $date->format('Y-m-d'));
-                    array_push($rations, $date->format('Y-m-d'));
-                    continue;
-                }
-            }
-
-            if(!($daysInPeriod % 2 === 0)){
-                unset($rations[count($rations) - 1]);
-            }
-        }
-
-
-        dd($rations);
-
-        
-
+        $rationService->setTariff($request->get('tariff'));
+        $rationService->setFirstDateRange($request->get('firstDate'));
+        $rationService->setLastDateRange($request->get('lastDate'));
+        $rationService->setScheduleType($request->get('schedule_type'));
+        dd($rationService->getRations());
 
     }
 

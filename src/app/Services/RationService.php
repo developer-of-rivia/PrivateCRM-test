@@ -11,12 +11,18 @@ class RationService
     private string $firstDateRange;
     private string $lastDateRange;
     private array $carbonDeliveryPeriodArray;
-    private string $schedule_type;
+    private string $scheduleType;
     private array $rations;
+
+    public function getRations(): array
+    {
+        $this->prepareRationsDays();
+        return $this->rations;
+    }
 
     public function setScheduleType($scheduleType): void
     {
-        $this->schedule_type = $scheduleType;
+        $this->scheduleType = $scheduleType;
     }
 
     public function setTariff(int $tariffId): void
@@ -47,15 +53,17 @@ class RationService
 
     private function prepareRationsDays(): void
     {
+        $this->createCarbonDeliveryPeriod();
+
         $rations = [];
 
-        if($this->schedule_type == 'EVERY_DAY') {
+        if($this->scheduleType == 'EVERY_DAY') {
             foreach($this->carbonDeliveryPeriodArray as $date){
                 array_push($rations, $date->format('Y-m-d'));
             }
         }
 
-        if($this->schedule_type == 'EVERY_OTHER_DAY') {
+        if($this->scheduleType == 'EVERY_OTHER_DAY') {
             foreach($this->carbonDeliveryPeriodArray as $key => $date){
                 if (0 === ($key % 2)) {
                     array_push($rations, $date->format('Y-m-d'));
@@ -64,7 +72,7 @@ class RationService
             }
         }
 
-        if($this->schedule_type == 'EVERY_OTHER_DAY_TWICE') {
+        if($this->scheduleType == 'EVERY_OTHER_DAY_TWICE') {
             $daysInPeriod = count($this->carbonDeliveryPeriodArray);
 
             foreach($this->carbonDeliveryPeriodArray as $key => $date){
