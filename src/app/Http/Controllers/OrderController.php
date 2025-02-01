@@ -58,6 +58,7 @@ class OrderController extends Controller
 
         $deliveryPeriod = CarbonPeriod::create($firstDate, $lastDate)->toArray();
 
+
         if($cookingDayBefore == false) {
             $cookingPeriod = $deliveryPeriod;
         } else {
@@ -125,7 +126,7 @@ class OrderController extends Controller
         }
 
 
-        // dd($rations);
+        dd($rations);
 
 
 
