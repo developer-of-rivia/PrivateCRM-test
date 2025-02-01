@@ -49,9 +49,11 @@ class OrderController extends Controller
         $rationService->setFirstDateRange($request->get('firstDate'));
         $rationService->setLastDateRange($request->get('lastDate'));
         $rationService->setScheduleType($request->get('schedule_type'));
-        $rationService->getRations();
+        
 
-        $rationService->prepareCookingDays();
+        dump($rationService->getDeliveryRations());
+        dd($rationService->getCookingRations());
+
 
     }
 
