@@ -12,23 +12,20 @@ class RationService
     private string $scheduleType;
     private string $firstDateRange;
     private string $lastDateRange;
-    private array $carbonDeliveryPeriodArray;
+    private array $carbonPeriod;
     private array $deliveryRations;
     private array $cookingRations;
-
 
     /**
      * 
      */
     public function getDeliveryRations(): array
     {
-        $this->prepareDeliveryDays();
         return $this->deliveryRations;
     }
 
     public function getCookingRations(): array
     {
-        $this->prepareCookingDays();
         return $this->cookingRations;
     }
 
@@ -47,9 +44,20 @@ class RationService
         $this->firstDateRange = $date;
     }
 
-    public function setLastDateRange($date): void
+    public function setLastDateRange($date): RationService
     {
         $this->lastDateRange = $date;
+        return $this;
+    }
+
+    /**
+     * 
+     */
+
+    public function handle(): void
+    {
+        $this->prepareDeliveryDays();
+        $this->prepareCookingDays();
     }
 
     /**
@@ -66,7 +74,7 @@ class RationService
      */
     private function createCarbonDeliveryPeriod(): void
     {
-        $this->carbonDeliveryPeriodArray = CarbonPeriod::create($this->firstDateRange, $this->lastDateRange)->toArray();
+        $this->carbonPeriod = CarbonPeriod::create($this->firstDateRange, $this->lastDateRange)->toArray();
     }
 
     /**
@@ -79,13 +87,13 @@ class RationService
 
 
         if($this->scheduleType == 'EVERY_DAY') {
-            foreach($this->carbonDeliveryPeriodArray as $date){
+            foreach($this->carbonPeriod as $date){
                 array_push($deliveryPeriodArray, $date);
             }
         }
 
         if($this->scheduleType == 'EVERY_OTHER_DAY') {
-            foreach($this->carbonDeliveryPeriodArray as $key => $date){
+            foreach($this->carbonPeriod as $key => $date){
                 if (0 === ($key % 2)) {
                     array_push($deliveryPeriodArray, $date);
                     continue;
@@ -94,9 +102,9 @@ class RationService
         }
 
         if($this->scheduleType == 'EVERY_OTHER_DAY_TWICE') {
-            $daysInPeriod = count($this->carbonDeliveryPeriodArray);
+            $daysInPeriod = count($this->carbonPeriod);
 
-            foreach($this->carbonDeliveryPeriodArray as $key => $date){
+            foreach($this->carbonPeriod as $key => $date){
                 if (0 === ($key % 2)) {
                     array_push($deliveryPeriodArray, $date);
                     array_push($deliveryPeriodArray, $date);
@@ -115,7 +123,7 @@ class RationService
     /**
      * 
      */
-    public function prepareCookingDays()
+    private function prepareCookingDays()
     {
         $cookingDays = [];
         
@@ -132,6 +140,6 @@ class RationService
     }
 
     /**
-     * Вынести в отдельный класс переформирование массивов из карбона в обычные
+     * 
      */
 }

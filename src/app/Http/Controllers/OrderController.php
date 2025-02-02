@@ -7,8 +7,9 @@ use App\Models\Tariff;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Http\Requests\Order\StoreRequest;
 use App\Services\RationService;
+use App\Http\Requests\Order\StoreRequest;
+use App\Services\CarbonArrayToDatesArray;
 
 class OrderController extends Controller
 {
@@ -31,7 +32,7 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, RationService $rationService)
+    public function store(StoreRequest $request, RationService $rationService, CarbonArrayToDatesArray $block)
     {
         // Order::create([
         //     'client_name' => $request->get('name'),
@@ -44,16 +45,32 @@ class OrderController extends Controller
         // ]);
 
 
-
         $rationService->setTariff($request->get('tariff'));
         $rationService->setFirstDateRange($request->get('firstDate'));
         $rationService->setLastDateRange($request->get('lastDate'));
         $rationService->setScheduleType($request->get('schedule_type'));
+        $rationService->handle();
+
+
+
         
+        $deliveryPeriod = app(CarbonArrayToDatesArray::class);
+        $deliveryPeriod->setCarbonArray($rationService->getDeliveryRations());
+        $deliveryPeriod->handle();
+        $deliveryPeriod = $deliveryPeriod->getSimpleArray();
 
-        dump($rationService->getDeliveryRations());
-        dd($rationService->getCookingRations());
 
+
+        $cookingPeriod = app(CarbonArrayToDatesArray::class);
+        $cookingPeriod->setCarbonArray($rationService->getCookingRations());
+        $cookingPeriod->handle();
+        $cookingPeriod = $cookingPeriod->getSimpleArray();
+
+        dump($deliveryPeriod);
+        dd($cookingPeriod);
+
+
+        
 
     }
 
