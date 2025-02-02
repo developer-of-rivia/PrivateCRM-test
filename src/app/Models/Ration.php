@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ration extends Model
+class Ration extends Model
 {
     //
 }
