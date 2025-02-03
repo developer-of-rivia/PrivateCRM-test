@@ -9,7 +9,7 @@ class CarbonArrayToDatesArray
     private array $carbonArray = [];
     private array $simpleArray = [];
 
-    public function setCarbonArray($array): void
+    public function setCarbonArray(array $array): void
     {
         $this->carbonArray = $array;
     }

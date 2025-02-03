@@ -7,7 +7,7 @@ use App\Models\Tariff;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Services\RationService;
+use App\Services\PrepareRationDates;
 use App\Http\Requests\Order\StoreRequest;
 use App\Services\CarbonArrayToDatesArray;
 
@@ -32,8 +32,14 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, RationService $rationService, CarbonArrayToDatesArray $block)
+    public function store(StoreRequest $request, PrepareRationDates $prepareRationDates)
     {
+        $tarifId = $request->get('tariff');
+        $shceduleType = $request->get('schedule_type');
+        $firstDateRange = $request->get('firstDate');
+        $lastDateRange = $request->get('lastDate');
+
+
         // Order::create([
         //     'client_name' => $request->get('name'),
         //     'client_phone' => $request->get('phone'),
@@ -45,29 +51,10 @@ class OrderController extends Controller
         // ]);
 
 
-        $rationService->setTariff($request->get('tariff'));
-        $rationService->setFirstDateRange($request->get('firstDate'));
-        $rationService->setLastDateRange($request->get('lastDate'));
-        $rationService->setScheduleType($request->get('schedule_type'));
-        $rationService->handle();
+        $prepareRationDates->setEnterData($tarifId, $shceduleType, $firstDateRange, $lastDateRange);
+        $prepareRationDates->handle();
 
 
-
-        
-        $deliveryPeriod = app(CarbonArrayToDatesArray::class);
-        $deliveryPeriod->setCarbonArray($rationService->getDeliveryRations());
-        $deliveryPeriod->handle();
-        $deliveryPeriod = $deliveryPeriod->getSimpleArray();
-
-
-
-        $cookingPeriod = app(CarbonArrayToDatesArray::class);
-        $cookingPeriod->setCarbonArray($rationService->getCookingRations());
-        $cookingPeriod->handle();
-        $cookingPeriod = $cookingPeriod->getSimpleArray();
-
-        dump($deliveryPeriod);
-        dd($cookingPeriod);
 
 
         
