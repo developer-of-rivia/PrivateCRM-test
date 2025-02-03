@@ -2,20 +2,35 @@
 
 namespace App\Services;
 
-use App\Services\CreateCarbonDeliveryPeriod;
+use App\Services\CreateCarbonPeriod;
 
-class PrepareDeliveryDays
+class PrepareDeliveryDates
 {
-    private array $enterData = [];
-    private CreateCarbonDeliveryPeriod $creator;
+    private $enterData;
+    private $creator;
     private $carbonPeriod;
+    private $deliveryRations;
 
+    /**
+     * 
+     */
     public function __construct()
     {
-        $this->creator = new CreateCarbonDeliveryPeriod();
+        $this->creator = new CreateCarbonPeriod();
     }
 
-    public function setEnterData($tariffId, $scheduleType, $firstDateRange, $lastDateRange)
+    /**
+     * 
+     */
+    public function getDeliveryRations(): array
+    {
+        return $this->deliveryRations;
+    }
+
+    /**
+     * 
+     */
+    public function setEnterData($tariffId, $scheduleType, $firstDateRange, $lastDateRange): void
     {
         $this->enterData = [
             'tariffId' => $tariffId,
@@ -25,19 +40,26 @@ class PrepareDeliveryDays
         ];
     }
 
-    public function handle()
+    /**
+     * 
+     */
+    public function prepare()
     {
-        $this->createCarbonDeliveryPeriod();
+        $this->creator->setDates($this->enterData['firstDateRange'], $this->enterData['lastDateRange']);
+        $this->creator->create();
+        $this->carbonPeriod = $this->creator->getPeriod();
+
+
         $deliveryPeriodArray = [];
 
 
-        if($this->enterData['shceduleType'] == 'EVERY_DAY') {
+        if($this->enterData['scheduleType'] == 'EVERY_DAY') {
             foreach($this->carbonPeriod as $date){
                 array_push($deliveryPeriodArray, $date);
             }
         }
 
-        if($this->enterData['shceduleType'] == 'EVERY_OTHER_DAY') {
+        if($this->enterData['scheduleType'] == 'EVERY_OTHER_DAY') {
             foreach($this->carbonPeriod as $key => $date){
                 if (0 === ($key % 2)) {
                     array_push($deliveryPeriodArray, $date);
@@ -46,7 +68,7 @@ class PrepareDeliveryDays
             }
         }
 
-        if($this->enterData['shceduleType'] == 'EVERY_OTHER_DAY_TWICE') {
+        if($this->enterData['scheduleType'] == 'EVERY_OTHER_DAY_TWICE') {
             $daysInPeriod = count($this->carbonPeriod);
 
             foreach($this->carbonPeriod as $key => $date){

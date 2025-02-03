@@ -8,7 +8,7 @@ use App\Models\Tariff;
 class PrepareCookingDates
 {
     private array $enterData = [];
-    private CreateCarbonDeliveryPeriod $creator;
+    private CreateCarbonPeriod $creator;
     private $carbonPeriod;
     private $cookingRations;
 
@@ -17,7 +17,7 @@ class PrepareCookingDates
      */
     public function __construct()
     {
-        $this->creator = new CreateCarbonDeliveryPeriod();
+        $this->creator = new CreateCarbonPeriod();
     }
 
     /**

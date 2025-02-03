@@ -4,26 +4,26 @@ namespace App\Services;
 
 use Carbon\CarbonPeriod;
 
-class CreateCarbonDeliveryPeriod
+class CreateCarbonPeriod
 {
     private $period;
     private $firstDate;
     private $lastDate;
 
-    public function setDates(string $firstDate, string $lastDate): CreateCarbonDeliveryPeriod
+    public function setDates($firstDate, $lastDate): CreateCarbonPeriod
     {
         $this->firstDate = $firstDate;
         $this->lastDate = $lastDate;
         return $this;
     }
 
-    public function create(): CreateCarbonDeliveryPeriod
+    public function create(): CreateCarbonPeriod
     {
-        $this->period = CarbonPeriod::create($this->firstDate, $this->lastDate)->toArray();
+        $this->period = CarbonPeriod::create($this->firstDate, $this->lastDate);
         return $this;
     }
 
-    public function getPeriod(): array
+    public function getPeriod()
     {
         return $this->period;
     }

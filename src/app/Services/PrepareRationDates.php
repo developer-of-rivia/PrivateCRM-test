@@ -45,11 +45,6 @@ class PrepareRationDates
         $this->prepareCookingDates = new PrepareCookingDates();
         $this->prepareDeliveryDates = new PrepareDeliveryDates();
         $this->carbonArrayToDatesArray = new CarbonArrayToDatesArray();
-
-        $this->resultDates = [
-            'deliveryDates',
-            'cookingDates',
-        ]
     }
 
     /**
@@ -64,7 +59,7 @@ class PrepareRationDates
             $this->enterData['lastDateRange'],
         );
         $this->prepareDeliveryDates->prepare();
-        $this->deliveryDates = $this->prepareDeliveryDates->getRations();
+        $this->deliveryDates = $this->prepareDeliveryDates->getDeliveryRations();
     }
 
     private function prepareCookingDates()
@@ -76,7 +71,7 @@ class PrepareRationDates
             $this->enterData['lastDateRange'],
         );
         $this->prepareCookingDates->prepare();
-        $this->cookingDates = $this->prepareDeliveryDates->getRations();
+        $this->cookingDates = $this->prepareCookingDates->getCookingRations();
     }
 
     /**
@@ -86,6 +81,8 @@ class PrepareRationDates
     {
         $this->prepareDeliveryDates();
         $this->prepareCookingDates();
+
+        dd($this->deliveryDates);
 
         $deliveryDates = $this->carbonArrayToDatesArray->setCarbonArray($this->deliveryDates)->handle()->getSimpleArray();
         $cookingDates = $this->carbonArrayToDatesArray->setCarbonArray($this->cookingDates)->handle()->getSimpleArray();
