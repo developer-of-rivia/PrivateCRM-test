@@ -52,7 +52,6 @@ class OrderController extends Controller
 
 
         $prepareRationDates->setEnterData($tarifId, $shceduleType, $firstDateRange, $lastDateRange);
-        $prepareRationDates->handle();
 
 
 

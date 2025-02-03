@@ -13,7 +13,6 @@ class PrepareDeliveryDays
     public function __construct()
     {
         $this->creator = new CreateCarbonDeliveryPeriod();
-        $this->creator->setDates();
     }
 
     public function setEnterData($tariffId, $scheduleType, $firstDateRange, $lastDateRange)

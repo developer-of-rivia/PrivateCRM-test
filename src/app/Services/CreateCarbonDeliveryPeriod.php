@@ -10,10 +10,11 @@ class CreateCarbonDeliveryPeriod
     private $firstDate;
     private $lastDate;
 
-    public function setDates(string $firstDate, string $lastDate): void
+    public function setDates(string $firstDate, string $lastDate): CreateCarbonDeliveryPeriod
     {
         $this->firstDate = $firstDate;
         $this->lastDate = $lastDate;
+        return $this;
     }
 
     public function create(): CreateCarbonDeliveryPeriod

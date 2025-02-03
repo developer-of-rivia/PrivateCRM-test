@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Services\CreateCarbonDeliveryPeriod;
 
-class PrepareDeliveryDays
+class PrepareDeliveryDates
 {
     private array $enterData = [];
     private CreateCarbonDeliveryPeriod $creator;
