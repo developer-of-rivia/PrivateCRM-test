@@ -19,7 +19,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('order.index');
+        return view('order.index', ['orders' => Order::all()]);
     }
 
     /**
@@ -66,12 +66,7 @@ class OrderController extends Controller
             ]);
         }
 
-
-
-
-
-        
-
+        // return 
     }
 
     /**
@@ -79,7 +74,11 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $order = Order::where('id', $id)->get()->first();
+        $rations = Ration::where('order_id', $id)->get();
+
+
+        return view('order.show', ['order' => $order, 'rations' => $rations]);
     }
 
     /**

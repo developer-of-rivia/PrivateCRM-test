@@ -24,6 +24,7 @@ Route::group(['prefix' => 'orders'], function(){
     Route::get('/', [OrderController::class, 'index'])->name('orders');
     Route::get('/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/store', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
 });
 
 
