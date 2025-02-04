@@ -13,4 +13,9 @@ class Order extends Model
     {
         return Tariff::all();
     }
+
+    public function tariff()
+    {
+        return $this->belongsTo(Tariff::class);
+    }
 }

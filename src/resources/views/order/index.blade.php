@@ -51,7 +51,7 @@
                 @foreach($orders as $order)
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <a href="{{ route('orders.show', $order->id) }}" class="p-2">
+                            <a href="{{ route('orders.show', $order->id) }}" class="p-2 bg-blue-700 rounded-md shadow-md text-white">
                                 {{ $order->id }}
                             </a>
                         </th>
@@ -65,7 +65,16 @@
                             {{ $order->tariff_id }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $order->schedule_type }}
+                            @switch($order->schedule_type)
+                                @case('EVERY_DAY')
+                                    <span>Каждый день</span>
+                                    @break
+                                @case('EVERY_OTHER_DAY')
+                                    <span>Через день</span>
+                                    @break
+                                @case('EVERY_OTHER_DAY_TWICE')
+                                    <span>Через день дважды</span>
+                            @endswitch
                         </td>
                         <td class="px-6 py-4">
                             {{ $order->comment }}

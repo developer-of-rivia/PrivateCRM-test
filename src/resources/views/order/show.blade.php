@@ -18,11 +18,26 @@
             </div>
             <div class="flex flex-col pt-3">
                 <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Тип доставки</dt>
-                <dd class="text-lg font-semibold">{{ $order->schedule_type }}</dd>
+                <dd class="text-lg font-semibold">
+                    @switch($order->schedule_type)
+                        @case('EVERY_DAY')
+                            <span>Каждый день</span>
+                            @break
+                        @case('EVERY_OTHER_DAY')
+                            <span>Через день</span>
+                            @break
+                        @case('EVERY_OTHER_DAY_TWICE')
+                            <span>Через день дважды</span>
+                    @endswitch
+                </dd>
             </div>
             <div class="flex flex-col pt-3">
                 <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Комментарий</dt>
                 <dd class="text-lg font-semibold">{{ $order->comment }}</dd>
+            </div>
+            <div class="flex flex-col pt-3">
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Тариф</dt>
+                <dd class="text-lg font-semibold">{{ $order->tariff->ration_name }}</dd>
             </div>
             <div class="flex flex-col pt-3">
                 <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Начальная дата</dt>

@@ -139,12 +139,4 @@ class RationService
 
         $this->cookingRations = $cookingDays;
     }
-
-    /**
-     * 
-     */
-    private function countPeriodDays()
-    {
-        $this->countDaysPeriod = count($this->deliveryRations);
-    }
 }

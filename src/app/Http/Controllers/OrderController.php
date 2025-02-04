@@ -66,7 +66,7 @@ class OrderController extends Controller
             ]);
         }
 
-        // return 
+        return Redirect()->route('orders'); 
     }
 
     /**
@@ -74,7 +74,8 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        $order = Order::where('id', $id)->get()->first();
+        $order = Order::where('id', $id)->with('tariff')->get()->first();
+
         $rations = Ration::where('order_id', $id)->get();
 
 
