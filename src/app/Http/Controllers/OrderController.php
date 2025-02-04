@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Ration;
 use App\Models\Tariff;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
@@ -32,17 +33,17 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, RationService $rationService, CarbonArrayToDatesArray $block)
+    public function store(StoreRequest $request, RationService $rationService)
     {
-        // Order::create([
-        //     'client_name' => $request->get('name'),
-        //     'client_phone' => $request->get('phone'),
-        //     'tariff_id' => $request->get('tariff'),
-        //     'schedule_type' => $request->get('schedule_type'),
-        //     'comment' => $request->get('comment'),
-        //     'first_date' => $request->get('firstDate'),
-        //     'last_date' => $request->get('lastDate'),
-        // ]);
+        $order = Order::create([
+            'client_name' => $request->get('name'),
+            'client_phone' => $request->get('phone'),
+            'tariff_id' => $request->get('tariff'),
+            'schedule_type' => $request->get('schedule_type'),
+            'comment' => $request->get('comment'),
+            'first_date' => $request->get('firstDate'),
+            'last_date' => $request->get('lastDate'),
+        ]);
 
 
         $rationService->setTariff($request->get('tariff'));
@@ -51,23 +52,22 @@ class OrderController extends Controller
         $rationService->setScheduleType($request->get('schedule_type'));
         $rationService->handle();
 
-
-
         
-        $deliveryPeriod = app(CarbonArrayToDatesArray::class);
-        $deliveryPeriod->setCarbonArray($rationService->getDeliveryRations());
-        $deliveryPeriod->handle();
-        $deliveryPeriod = $deliveryPeriod->getSimpleArray();
+        $deliveryRations = $rationService->getDeliveryRations();
+        $cookingRations = $rationService->getCookingRations();
+
+
+        foreach($deliveryRations as $key => $ration)
+        {
+            Ration::create([
+                'order_id' => $order->id,
+                'delivery_date' => $ration,
+                'cooking_date' => $cookingRations[$key],
+            ]);
+        }
 
 
 
-        $cookingPeriod = app(CarbonArrayToDatesArray::class);
-        $cookingPeriod->setCarbonArray($rationService->getCookingRations());
-        $cookingPeriod->handle();
-        $cookingPeriod = $cookingPeriod->getSimpleArray();
-
-        dump($deliveryPeriod);
-        dd($cookingPeriod);
 
 
         

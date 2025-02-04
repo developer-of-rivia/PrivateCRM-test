@@ -12,6 +12,7 @@ class RationService
     private string $scheduleType;
     private string $firstDateRange;
     private string $lastDateRange;
+
     private array $carbonPeriod;
     private array $deliveryRations;
     private array $cookingRations;
@@ -88,14 +89,14 @@ class RationService
 
         if($this->scheduleType == 'EVERY_DAY') {
             foreach($this->carbonPeriod as $date){
-                array_push($deliveryPeriodArray, $date);
+                array_push($deliveryPeriodArray, $date->format('Y-m-d'));
             }
         }
 
         if($this->scheduleType == 'EVERY_OTHER_DAY') {
             foreach($this->carbonPeriod as $key => $date){
                 if (0 === ($key % 2)) {
-                    array_push($deliveryPeriodArray, $date);
+                    array_push($deliveryPeriodArray, $date->format('Y-m-d'));
                     continue;
                 }
             }
@@ -106,8 +107,8 @@ class RationService
 
             foreach($this->carbonPeriod as $key => $date){
                 if (0 === ($key % 2)) {
-                    array_push($deliveryPeriodArray, $date);
-                    array_push($deliveryPeriodArray, $date);
+                    array_push($deliveryPeriodArray, $date->format('Y-m-d'));
+                    array_push($deliveryPeriodArray, $date->format('Y-m-d'));
                     continue;
                 }
             }
@@ -130,9 +131,9 @@ class RationService
         foreach($this->deliveryRations as $day)
         {
             if($this->tariffCookingIsAdvance() == true){
-                array_push($cookingDays, Carbon::create($day)->subDay());
+                array_push($cookingDays, Carbon::create($day)->subDay()->format('Y-m-d'));
             } else {
-                array_push($cookingDays, Carbon::create($day));
+                array_push($cookingDays, Carbon::create($day)->format('Y-m-d'));
             }
         }
 
@@ -142,4 +143,8 @@ class RationService
     /**
      * 
      */
+    private function countPeriodDays()
+    {
+        $this->countDaysPeriod = count($this->deliveryRations);
+    }
 }
