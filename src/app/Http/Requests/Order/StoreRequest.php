@@ -3,12 +3,11 @@
 namespace App\Http\Requests\Order;
 
 use Illuminate\Support\Carbon;
+use App\Rules\Order\LastDateRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
 {
-    protected $stopOnFirstFailure = true;
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -18,30 +17,29 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * Return true if last date more or equal to first date
-     */
-    // public function checkLastDate(): bool
-    // {
-    //     $firstDate = $this->firstDate;
-    //     $lastDate = $this->lastDate;
-
-    //     return Carbon::parse($firstDate)->lessThanOrEqualTo($lastDate);
-    // }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    // public function rules(): array
-    // {
-    //     return [
-    //         'name' => ['required', 'string'],
-    //         'phone' => ['required', 'size:11'],
-    //         'tariff' => ['required', 'exists:tariffs,id'],
-    //         'schedule_type' => ['required'],
-    //         'first_date' => ['required'],
-    //         'last_date' => ['required'],
-    //     ];
-    // }
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string'],
+            'phone' => ['required', 'size:11', 'unique:orders,client_phone'],
+            'tariff' => ['required', 'exists:tariffs,id'],
+            'schedule_type' => ['required'],
+            'firstDate' => ['required'],
+            'lastDate' => ['required', (new LastDateRule())->setFirstDate($this->firstDate)],
+        ];
+    }
+
+    /**
+     * 
+     */
+    public function messages(): array
+    {
+        return [
+            'phone.unique' => 'Заказ с таким номером телефона уже существует',
+        ];
+    }
 }
