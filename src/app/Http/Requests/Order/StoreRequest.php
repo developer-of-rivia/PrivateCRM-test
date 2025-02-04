@@ -29,7 +29,7 @@ class StoreRequest extends FormRequest
             'tariff' => ['required', 'exists:tariffs,id'],
             'schedule_type' => ['required'],
             'firstDate' => ['required'],
-            'lastDate' => ['required', (new LastDateRule())->setFirstDate($this->firstDate)],
+            'lastDate' => ['required', (new LastDateRule())->setFirstDate($this->firstDate)->setScheduleType($this->schedule_type)],
         ];
     }
 
