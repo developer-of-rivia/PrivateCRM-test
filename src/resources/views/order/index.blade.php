@@ -50,14 +50,14 @@
             <tbody>
                 @foreach($orders as $order)
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             <a href="{{ route('orders.show', $order->id) }}" class="p-2 bg-blue-700 rounded-md shadow-md text-white">
                                 {{ $order->id }}
                             </a>
-                        </th>
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        </td>
+                        <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {{ $order->client_name }}
-                        </th>
+                        </td>
                         <td class="px-6 py-4">
                             {{ $order->client_phone }}
                         </td>
@@ -87,6 +87,15 @@
                         </td>
                         <td class="px-6 py-4">
                             {{ $order->last_date }}
+                        </td>
+                        <td>
+                            <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-2 bg-blue-700 rounded-md shadow-md text-white">
+                                    X
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

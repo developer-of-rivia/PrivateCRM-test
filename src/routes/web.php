@@ -25,15 +25,8 @@ Route::group(['prefix' => 'orders'], function(){
     Route::get('/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/store', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::delete('/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 });
-
-
-Route::post('/ration/store', [RationController::class, 'store'])->name('rations.store');
-
-
-// Route::resource('orders', OrderController::class);
-
-
 
 
 
